@@ -18,6 +18,9 @@ stock = st.text_input("Enter NSE Stock Symbol (e.g., TCS.NS)", value="TCS.NS")
 if st.button("Analyze"):
     try:
         df = yf.download(stock, period='6mo', interval='1d')
+except Exception as e:
+    st.error("Failed to fetch stock data. Check your internet or stock symbol.")
+    st.stop()
         df['MA_10'] = df['Close'].rolling(window=10).mean()
         df['RSI'] = 100 - (100 / (1 + df['Close'].pct_change().rolling(14).mean()))
         df['Volatility'] = df['Close'].rolling(window=10).std()
