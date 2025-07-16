@@ -16,6 +16,21 @@ st.title("🔮 Quantum Bullish Stock Predictor")
 stock = st.text_input("Enter NSE Stock Symbol (e.g., TCS.NS)", value="TCS.NS")
 
 if st.button("Analyze"):
+    if not stock or "." not in stock:
+        st.error("Please enter a valid NSE stock symbol like 'TCS.NS'")
+        st.stop()
+
+    try:
+        df = yf.download(stock, period='6mo', interval='1d')
+        if df.empty:
+            st.error("No data found for this symbol. Please try another.")
+            st.stop()
+    except Exception as e:
+        st.error("Error fetching stock data.")
+        st.code(str(e))
+        st.stop()
+
+if st.button("Analyze"):
     try:
         df = yf.download(stock, period='6mo', interval='1d')
 except Exception as e:
